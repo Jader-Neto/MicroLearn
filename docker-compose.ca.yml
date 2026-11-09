@@ -1,0 +1,23 @@
+services:
+  gateway:
+    build:
+      secrets: [host_ca]
+  auth-service:
+    build:
+      secrets: [host_ca]
+  courses-service:
+    build:
+      secrets: [host_ca]
+  assessments-service:
+    build:
+      secrets: [host_ca]
+  recommendations-service:
+    build:
+      secrets: [host_ca]
+  frontend:
+    build:
+      secrets: [host_ca]
+
+secrets:
+  host_ca:
+    file: ${DOCKER_HOST_CA_FILE:?Defina DOCKER_HOST_CA_FILE com o certificado CA local}

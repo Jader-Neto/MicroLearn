@@ -1,0 +1,83 @@
+services:
+  gateway:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      args: { SERVICE_FOLDER: gateway }
+    environment:
+      JWT_SECRET: ${JWT_SECRET:?Defina JWT_SECRET no .env}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173}
+      AUTH_URL: http://auth-service:8000
+      COURSES_URL: http://courses-service:8000
+      ASSESSMENTS_URL: http://assessments-service:8000
+      RECOMMENDATIONS_URL: http://recommendations-service:8000
+    ports: ["127.0.0.1:8000:8000"]
+    depends_on:
+      auth-service: { condition: service_healthy }
+      courses-service: { condition: service_healthy }
+      assessments-service: { condition: service_healthy }
+      recommendations-service: { condition: service_healthy }
+    networks: [microlearn]
+  auth-service:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      args: { SERVICE_FOLDER: services/auth }
+    environment:
+      JWT_SECRET: ${JWT_SECRET:?Defina JWT_SECRET no .env}
+      AUTH_DB_PATH: /data/auth.sqlite3
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+    volumes: [auth_data:/data]
+    networks: [microlearn]
+  courses-service:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      args: { SERVICE_FOLDER: services/courses }
+    environment:
+      DB_PATH: /data/courses.sqlite3
+      JWT_SECRET: ${JWT_SECRET:?Defina JWT_SECRET no .env}
+      AUTH_URL: http://auth-service:8000
+    volumes: [courses_data:/data]
+    networks: [microlearn]
+  assessments-service:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      args: { SERVICE_FOLDER: services/assessments }
+    environment:
+      DB_PATH: /data/assessments.sqlite3
+      JWT_SECRET: ${JWT_SECRET:?Defina JWT_SECRET no .env}
+      AUTH_URL: http://auth-service:8000
+      COURSES_URL: http://courses-service:8000
+    volumes: [assessments_data:/data]
+    networks: [microlearn]
+  recommendations-service:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      args: { SERVICE_FOLDER: services/recommendations }
+    environment:
+      DB_PATH: /data/recommendations.sqlite3
+      JWT_SECRET: ${JWT_SECRET:?Defina JWT_SECRET no .env}
+      AUTH_URL: http://auth-service:8000
+      COURSES_URL: http://courses-service:8000
+      ASSESSMENTS_URL: http://assessments-service:8000
+    volumes: [recommendations_data:/data]
+    networks: [microlearn]
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports: ["127.0.0.1:5173:80"]
+    depends_on: [gateway]
+    networks: [microlearn]
+volumes:
+  auth_data:
+  courses_data:
+  assessments_data:
+  recommendations_data:
+networks:
+  microlearn:
+    driver: bridge

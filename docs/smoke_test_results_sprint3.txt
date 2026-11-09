@@ -1,0 +1,15 @@
+OK: gateway e 4 microsserviços operacionais em processos separados
+OK: cadastro via gateway HTTP 201
+OK: login via gateway HTTP 200 e JWT emitido
+OK: /auth/me com JWT HTTP 200
+OK: /auth/me sem JWT bloqueado HTTP 401
+OK: catálogo público vazio HTTP 200
+OK: professor cria curso, adiciona aula e publica via Gateway
+OK: aluno matricula-se, duplicidade bloqueada e aulas disponíveis
+OK: aluno não pode criar curso HTTP 403
+OK: professor cria avaliação, aluno lê questões sem gabarito
+OK: resposta é corrigida (5/10), segunda tentativa bloqueada e nota persistida
+OK: recomendação mostra aula correta para nota inferior a 7
+OK: aluno não matriculado não acessa questionário nem notas de outro aluno
+OK: permissão de professor revogada bloqueia token antigo HTTP 403
+RESULTADO: TESTE DE PROCESSOS CONCLUÍDO COM SUCESSO

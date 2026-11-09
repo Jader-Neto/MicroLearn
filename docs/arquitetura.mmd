@@ -1,0 +1,10 @@
+flowchart TD
+    A[Frontend React - :5173] --> B[API Gateway FastAPI - :8000]
+    B --> C[Auth Service]
+    B --> D[Courses Service]
+    B --> E[Assessments Service]
+    B --> F[Recommendations Service]
+    C --> G[(SQLite Auth)]
+    D --> H[(SQLite Courses)]
+    E --> I[(SQLite Assessments)]
+    F --> J[(SQLite Recommendations)]

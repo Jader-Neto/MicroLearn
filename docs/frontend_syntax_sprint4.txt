@@ -1,0 +1,2 @@
+Análise sintática TypeScript transpileModule: 24 arquivos JS/JSX, 0 erro(s).
+Não equivale a npm run build ou teste de navegador.

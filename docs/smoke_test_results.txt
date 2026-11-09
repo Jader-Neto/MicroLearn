@@ -1,0 +1,7 @@
+OK: gateway e 4 microsserviços operacionais em processos separados
+OK: cadastro via gateway HTTP 201
+OK: login via gateway HTTP 200 e JWT emitido
+OK: /auth/me com JWT HTTP 200
+OK: /auth/me sem JWT bloqueado HTTP 401
+OK: domínio Cursos sinaliza implementação futura HTTP 501
+RESULTADO: TESTE DE PROCESSOS CONCLUÍDO COM SUCESSO
