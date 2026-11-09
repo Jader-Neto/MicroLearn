@@ -1,214 +1,243 @@
-# MicroLearn — Ambiente Virtual de Aprendizagem
+<div align="center">
+  <h1>MicroLearn</h1>
+  <p><strong>Ambiente Virtual de Aprendizagem com arquitetura de microsserviços</strong></p>
+  <p>Uma plataforma acadêmica completa para administrar usuários, publicar cursos, organizar aulas, aplicar avaliações e recomendar conteúdos de revisão com base no desempenho do aluno.</p>
+  <p>
+    <img src="https://img.shields.io/badge/Python-3.12-3776AB?logo=python&amp;logoColor=white" alt="Python 3.12">
+    <img src="https://img.shields.io/badge/FastAPI-REST-009688?logo=fastapi&amp;logoColor=white" alt="FastAPI">
+    <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&amp;logoColor=172B4D" alt="React 19">
+    <img src="https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&amp;logoColor=white" alt="Docker Compose">
+    <img src="https://img.shields.io/badge/testes-24%20aprovados-2EA44F" alt="24 testes aprovados">
+  </p>
+  <p>
+    <a href="#visão-geral">Visão geral</a> •
+    <a href="#arquitetura">Arquitetura</a> •
+    <a href="#funcionalidades">Funcionalidades</a> •
+    <a href="#como-executar">Executar</a> •
+    <a href="#qualidade-e-testes">Testes</a> •
+    <a href="#documentação">Documentação</a>
+  </p>
+</div>
 
-**Engenharia de Software 2026.2 | Versão consolidada após a Sprint 4**
+---
 
-O MicroLearn é um AVA acadêmico com microsserviços Python/FastAPI independentes, API Gateway REST, frontend React baseado em componentes e persistência SQLite separada por domínio. O desenvolvimento segue a modelagem e o Product Backlog preparados para a disciplina.
+## Visão geral
 
-## Estado real do projeto
+O MicroLearn foi desenvolvido para a disciplina de **Engenharia de Software 2026.2**. A solução combina um frontend React com uma API Gateway e quatro serviços de negócio independentes, todos executados por Docker Compose.
 
-| Domínio | Implementado agora | Situação |
-|---|---|---|
-| Autenticação | Cadastro, login, JWT, perfil, administração de usuários e tela React do administrador | Backend testado; frontend compilado e carregado no navegador |
-| Cursos | Catálogo, CRUD de cursos, publicação, aulas e matrículas | Funcional e testado na Sprint 2 |
-| Avaliações | Questionários objetivos, gabarito protegido, uma tentativa, notas e resultados | Funcional e testado na Sprint 3 |
-| Recomendações | Aulas de revisão para resultados inferiores a 7,0, com cache por aluno | Funcional e testado na Sprint 3 |
-| API Gateway | Encaminhamento HTTP, JWT, estado dos serviços | Funcional e testado |
-| Frontend React | Cadastro/login, catálogo, matrículas, aulas, editor de avaliações, respostas, notas e recomendações | Build de produção aprovado e Home validada no Chrome com a Gateway integrada |
-
-**Validações executadas nesta entrega:** 24 testes Python aprovados novamente em 09/11/2026, smoke HTTP real entre a Gateway e quatro serviços aprovado (incluindo avaliação e recomendação), `npm run build` aprovado e Docker Compose validado. Os seis contêineres permaneceram ativos sem reinícios, os cinco serviços FastAPI ficaram saudáveis e a Gateway confirmou os quatro microsserviços. Um E2E pela API no Docker percorreu cadastro, promoção de professor, curso/aula/publicação, matrícula, avaliação com gabarito protegido, nota e recomendação; a Home React respondeu HTTP 200 e foi renderizada no Chrome.
-
-## Sprint 4: administração de usuários, integração final e documentação
-
-Nesta sprint foi acrescentada a tela **`/admin/usuarios`**, acessível ao perfil administrador. Ela permite consultar contas, autorizar professores e administradores, ativar/desativar usuários, com confirmação de alterações e bloqueio de autodesativação. As operações utilizam os endpoints `GET /api/v1/auth/users` e `PATCH /api/v1/auth/users/{user_id}` já implementados no Auth Service.
-
-A página inicial ganhou o botão **Atualizar estado**, que consulta a Gateway em `/api/v1/status` para listar Autenticação, Cursos, Avaliações e Recomendações. Os registros de execução e os diagramas ficam em `docs/`, incluindo `VALIDACAO_SPRINT4.md`, `CHECKLIST_ENTREGA.md` e `API_ENDPOINTS.md`. O Docker Compose foi validado no Windows;
-
-## Sprint 3: avaliações e recomendações
-
-O professor acessa **/cursos/:id/avaliacoes** a partir de um curso seu, escolhe a aula relacionada ao conteúdo, cria um questionário objetivo (1 a 20 questões, de 2 a 5 alternativas e apenas uma resposta correta) e consulta as notas. O aluno já matriculado acessa a mesma rota para responder à avaliação. Há **uma tentativa por aluno e questionário**. A nota é calculada por `round(10 * acertos / total, 2)` e fica registrada no banco privado de Avaliações. Alunos acessam **/desempenho** para consultar suas notas e recomendações de aulas vinculadas à avaliação com nota **estritamente inferior a 7,0**.
-
-**Endpoints novos (todos sob `/api/v1` na Gateway):**
-
-| Método e caminho | Permissão / operação |
+| Perfil | Experiência na plataforma |
 |---|---|
-| POST `/assessments/courses/{course_id}/quizzes` | Professor autor do curso: cria questionário e define aula de revisão |
-| GET `/assessments/courses/{course_id}/quizzes` | Professor autor ou aluno matriculado: lista questionários |
-| GET `/assessments/quizzes/{quiz_id}` | Consultar questões sem divulgar o gabarito |
-| POST `/assessments/quizzes/{quiz_id}/submit` | Aluno matriculado: envia respostas e recebe a nota |
-| GET `/assessments/results/mine` | Aluno: somente suas notas |
-| GET `/assessments/courses/{course_id}/results` | Professor autor: notas dos alunos do curso |
-| DELETE `/assessments/quizzes/{quiz_id}` | Professor autor: exclui somente questionário sem respostas |
-| GET `/recommendations/mine` | Aluno: consulta aulas sugeridas para notas abaixo de 7,0 |
+| **Aluno** | Consulta o catálogo, realiza matrículas, acessa aulas, responde avaliações e acompanha notas e recomendações. |
+| **Professor** | Cria cursos e aulas, publica conteúdos, elabora questionários e consulta resultados dos alunos. |
+| **Administrador** | Gerencia contas, autoriza professores, altera perfis e ativa ou desativa usuários. |
 
-**Exemplo de criação de questionário** (`POST /api/v1/assessments/courses/{course_id}/quizzes`, token de professor):
+### Principais entregas
 
-```json
-{
-  "title": "Avaliação sobre Python",
-  "lesson_id": "UUID_DA_AULA_DO_CURSO",
-  "questions": [
-    {"statement": "Quanto é 2 + 2?", "options": ["3", "4", "5"], "correct_index": 1},
-    {"statement": "Quanto é 3 + 3?", "options": ["5", "6", "7"], "correct_index": 1}
-  ]
-}
-```
+- Autenticação JWT e autorização por perfil;
+- catálogo público de cursos, publicação, aulas e matrículas;
+- avaliações objetivas com gabarito protegido e correção automática;
+- histórico de resultados e recomendação de revisão para notas abaixo de 7,0;
+- administração de usuários pela própria interface;
+- monitoramento da saúde dos serviços pela API Gateway;
+- persistência SQLite independente por domínio;
+- build reproduzível e execução completa com Docker Compose.
 
-**Exemplo de resposta** (`POST /api/v1/assessments/quizzes/{quiz_id}/submit`, token de aluno): `{"answers":[1,0]}`. Uma resposta correta em duas questões retorna a nota 5,00 e gera recomendação de revisão na tela de desempenho. O campo `correct_index` nunca aparece no endpoint de consulta das questões. A validação de contas e matrículas ocorre por HTTP, sem que Avaliações ou Recomendações acessem os bancos dos outros serviços.
+## Arquitetura
 
-**Limitações da versão acadêmica:** avaliações são objetivas e imutáveis depois de criadas; questionários respondidos não podem ser excluídos; uma avaliação exige uma aula de revisão previamente cadastrada. A remoção de aulas/cursos não dispara uma exclusão distribuída de questões e notas (registros históricos podem permanecer no serviço Avaliações). O serviço Recomendações deixa de sugerir conteúdos inexistentes ou sem acesso, mas não há um processo de limpeza distribuída de dados. Em produção, isso exigiria uma política explícita de retenção, eventos de domínio e consistência eventual. O build e a Home da integração React foram validados no Docker e no Chrome; os fluxos completos por perfil ainda devem ser ensaiados no navegador antes da entrega final.
+A aplicação segue uma arquitetura de microsserviços: o navegador acessa somente o frontend e a API Gateway; cada domínio mantém sua própria API e seu próprio banco de dados.
 
-## 1. Executar no Windows (Docker Desktop)
+<p align="center">
+  <img src="docs/arquitetura.png" alt="Arquitetura do MicroLearn com frontend React, API Gateway, quatro microsserviços e bancos independentes" width="100%">
+</p>
 
-Pré-requisitos: Docker Desktop com Docker Compose, acesso à internet para baixar imagens/dependências, navegador e PowerShell. O projeto pode ser executado também em Linux/macOS com comandos equivalentes.
+| Camada | Responsabilidade |
+|---|---|
+| **Frontend React** | Interface responsiva, rotas protegidas e experiências específicas para aluno, professor e administrador. |
+| **API Gateway** | Ponto de entrada REST, encaminhamento de requisições, CORS e visão consolidada da saúde dos serviços. |
+| **Auth Service** | Cadastro, login, JWT, perfis e administração de usuários. |
+| **Courses Service** | Cursos, aulas, publicação e matrículas. |
+| **Assessments Service** | Questionários, questões, tentativas, correção e notas. |
+| **Recommendations Service** | Sugestões determinísticas de revisão com base nos resultados. |
+| **Persistência** | Um banco SQLite e um volume por domínio, sem compartilhamento direto de tabelas. |
 
-Abra o PowerShell na pasta `microlearn`:
+### Decisões de projeto
+
+- A Gateway é a única entrada para as APIs externas em `/api/v1`.
+- Os serviços validam permissões e vínculos por HTTP, sem consultar bancos de outros domínios.
+- O cadastro público sempre cria um aluno; somente um administrador pode promover outros perfis.
+- O gabarito nunca é devolvido ao aluno nos endpoints de consulta.
+- As portas externas são publicadas apenas em `127.0.0.1`.
+
+<details>
+<summary><strong>Ver organização dos componentes React</strong></summary>
+
+<br>
+
+<p align="center">
+  <img src="docs/componentes_react.png" alt="Organização dos componentes e páginas React do MicroLearn" width="100%">
+</p>
+
+O `AuthContext` concentra a sessão, `ProtectedRoute` controla o acesso por perfil e `apiClient` centraliza a comunicação com a Gateway. Componentes como `AppShell`, `Navbar`, `Alert`, `CourseCard`, `CourseForm` e `LessonEditor` são reutilizados entre as telas.
+
+</details>
+
+<details>
+<summary><strong>Ver fluxo de avaliação e recomendação</strong></summary>
+
+<br>
+
+<p align="center">
+  <img src="docs/fluxo_avaliacao.png" alt="Fluxo de avaliação e recomendação entre aluno, Gateway e microsserviços" width="100%">
+</p>
+
+Após a tentativa, o serviço de Avaliações registra a nota. Resultados inferiores a 7,0 originam uma recomendação de aula de revisão, sempre respeitando matrícula e acesso ao conteúdo.
+
+</details>
+
+## Funcionalidades
+
+### Autenticação e administração
+
+- cadastro e login com JWT;
+- consulta do perfil autenticado;
+- listagem administrativa de usuários;
+- promoção para professor ou administrador;
+- ativação e desativação de contas;
+- bloqueio de autodesativação do administrador.
+
+### Cursos e aprendizagem
+
+- catálogo público de cursos publicados;
+- criação e edição de cursos em rascunho;
+- publicação controlada pelo professor autor;
+- aulas com conteúdo textual, posição e material complementar;
+- matrícula única por aluno e curso;
+- acesso às aulas somente por autoria ou matrícula.
+
+### Avaliações e desempenho
+
+- questionários de 1 a 20 questões;
+- questões com 2 a 5 alternativas e uma resposta correta;
+- uma tentativa por aluno e questionário;
+- correção automática na escala de 0 a 10;
+- gabarito protegido nas consultas do aluno;
+- resultados individuais e visão do professor por curso;
+- recomendações explicáveis de conteúdo para revisão.
+
+## Como executar
+
+### Pré-requisitos
+
+- Docker Desktop com Docker Compose;
+- navegador atualizado;
+- acesso à internet no primeiro build.
+
+### 1. Clonar e configurar
+
+No PowerShell:
 
 ```powershell
+git clone https://github.com/Jader-Neto/MicroLearn.git
+cd MicroLearn
 Copy-Item .env.example .env
 python -c "import secrets; print(secrets.token_urlsafe(48))"
 notepad .env
 ```
 
-Insira a chave aleatória gerada em `JWT_SECRET` no arquivo `.env` (substitua `ALTERE_ME`). Para demonstrar o perfil de professor, configure também uma conta administrativa inicial:
+Substitua `ALTERE_ME` pela chave gerada e, para habilitar o administrador inicial, preencha:
 
 ```ini
+JWT_SECRET=chave-aleatoria-gerada
+CORS_ORIGINS=http://localhost:5173
 ADMIN_EMAIL=admin@microlearn.local
 ADMIN_PASSWORD=coloque-aqui-uma-senha-forte
 ```
 
-> Use credenciais locais de teste; **não versione `.env`**. Uma senha administrativa deve ter pelo menos 12 caracteres. Em ambiente didático, a conta administrativa é criada automaticamente no primeiro início se as variáveis estiverem preenchidas e esse e-mail ainda não existir.
+> Use apenas credenciais locais de demonstração. O arquivo `.env` é ignorado pelo Git e não deve ser versionado.
 
-Execute:
+### 2. Iniciar a aplicação
 
 ```powershell
 docker compose up --build -d
 docker compose ps
 ```
 
-Se um antivírus ou proxy corporativo inspecionar HTTPS e o build falhar ao validar o certificado dos repositórios de dependências, exporte apenas a CA pública local em formato PEM para um arquivo ignorado, por exemplo `.certs/host-ca.crt`, defina `DOCKER_HOST_CA_FILE=./.certs/host-ca.crt` no `.env` e execute:
+Quando os serviços estiverem prontos, a listagem deve apresentar cinco backends saudáveis e o frontend em execução.
+
+### 3. Acessar
+
+| Recurso | Endereço |
+|---|---|
+| **Interface web** | http://localhost:5173 |
+| **Swagger da Gateway** | http://localhost:8000/docs |
+| **Estado dos serviços** | http://localhost:8000/api/v1/status |
+| **Catálogo público** | http://localhost:8000/api/v1/courses |
+
+Para encerrar sem excluir os bancos:
+
+```powershell
+docker compose down
+```
+
+> `docker compose down -v` também remove os volumes e todos os dados locais.
+
+<details>
+<summary><strong>Build em rede com inspeção HTTPS</strong></summary>
+
+Se um antivírus ou proxy inspecionar HTTPS e o build não reconhecer a cadeia de certificados, exporte somente a CA pública local em formato PEM para `.certs/host-ca.crt`, adicione ao `.env`:
+
+```ini
+DOCKER_HOST_CA_FILE=./.certs/host-ca.crt
+```
+
+E execute:
 
 ```powershell
 docker compose -f docker-compose.yml -f docker-compose.ca.yml up --build -d
 ```
 
-O arquivo de sobreposição fornece a CA somente durante as etapas de instalação do build e mantém a verificação TLS ativa. Não versione o certificado local nem use opções que desabilitem a validação HTTPS.
+A CA é fornecida somente durante a instalação de dependências no build. A validação TLS permanece ativa e o certificado local continua fora do versionamento.
 
-| Acesso | Endereço |
+</details>
+
+## Fluxo de demonstração
+
+1. Crie uma conta pelo formulário público; ela receberá o perfil de aluno.
+2. Entre como administrador e abra `/admin/usuarios`.
+3. Promova uma segunda conta para professor.
+4. Entre como professor, crie um curso, adicione uma aula e publique o conteúdo.
+5. Entre como aluno, abra o catálogo e realize a matrícula.
+6. Como professor, crie um questionário associado à aula.
+7. Como aluno, responda à avaliação e consulte `/desempenho`.
+8. Verifique a nota e, quando inferior a 7,0, a recomendação de revisão.
+
+## API e segurança
+
+A base externa da API é `http://localhost:8000/api/v1`. A documentação completa dos contratos está em [docs/API_ENDPOINTS.md](docs/API_ENDPOINTS.md), e o Swagger interativo fica disponível em `/docs` enquanto a aplicação estiver em execução.
+
+| Proteção | Implementação |
 |---|---|
-| Interface React | http://localhost:5173 |
-| API Gateway Swagger | http://localhost:8000/docs |
-| Saúde dos serviços | http://localhost:8000/api/v1/status |
-| Catálogo público | http://localhost:8000/api/v1/courses |
+| **Autenticação** | JWT assinado com segredo configurado fora do código. |
+| **Autorização** | Perfis e estado da conta são revalidados nas operações protegidas. |
+| **Isolamento** | Cada microsserviço possui banco e volume próprios. |
+| **Avaliações** | O gabarito não aparece nos dados enviados ao aluno. |
+| **Segredos** | `.env`, certificados locais, bancos e artefatos de build estão ignorados no Git. |
 
-As portas são publicadas apenas em `127.0.0.1`. Os quatro microsserviços são acessados pela Gateway e comunicam-se na rede interna do Compose. Para encerrar sem apagar os bancos, execute `docker compose down`; **`docker compose down -v` remove os volumes e seus dados**.
+## Qualidade e testes
 
-## 2. Demonstração dos perfis, cursos e matrículas
+O projeto foi validado tanto fora quanto dentro do Docker.
 
-### 2.1. Criar conta e autorizá-la como professor
+| Verificação | Resultado |
+|---|---|
+| Testes automatizados Python | **24 aprovados** |
+| Smoke test com processos HTTP reais | **Gateway + 4 serviços aprovados** |
+| Build de produção React/Vite | **Aprovado** |
+| Docker Compose | **6 contêineres em execução** |
+| Health checks | **5 backends saudáveis** |
+| E2E pela API Docker | **Cadastro → curso → matrícula → avaliação → nota → recomendação** |
+| Renderização no Chrome | **Interface carregada sem erros** |
 
-1. Acesse `http://localhost:5173/cadastro` e crie uma conta comum (Aluno).
-2. Faça login como administrador pelo endpoint `POST /api/v1/auth/login` na Swagger ou PowerShell, usando as credenciais configuradas no `.env`.
-3. Consulte `GET /api/v1/auth/users` com o token administrativo para identificar o `id` do aluno que será professor.
-4. Utilize `PATCH /api/v1/auth/users/{id}`, passando `{"role":"teacher"}`, com token administrativo. Faça logout/login na interface com a conta promovida para receber o novo perfil.
-5. Acesse `http://localhost:5173/professor/cursos` e crie um curso, inicialmente como rascunho.
-6. Abra o curso, inclua uma ou mais aulas e clique em **Publicar curso**.
-
-**Exemplo PowerShell para promoção de papel:**
-
-```powershell
-$admin = @{email='admin@microlearn.local'; password='SENHA_DE_ADMIN_DO_ENV'} | ConvertTo-Json
-$loginAdmin = Invoke-RestMethod http://localhost:8000/api/v1/auth/login -Method Post -ContentType 'application/json' -Body $admin
-$headers = @{Authorization="Bearer $($loginAdmin.access_token)"}
-$usuarios = Invoke-RestMethod http://localhost:8000/api/v1/auth/users -Headers $headers
-$usuarios | Format-Table id,name,email,role
-# Substitua ID_DO_USUARIO pelo UUID retornado acima:
-Invoke-RestMethod 'http://localhost:8000/api/v1/auth/users/ID_DO_USUARIO' -Method Patch -Headers $headers -ContentType 'application/json' -Body '{"role":"teacher"}'
-```
-
-O cadastro público sempre cria um aluno. Não é permitido escolher o papel de professor ou administrador no formulário público. **Na Sprint 4, a promoção também pode ser feita na interface:** entre como administrador e abra `http://localhost:5173/admin/usuarios`. A interface permite mudar o perfil e ativar/desativar contas, sem usar o Swagger.
-
-### 2.2. Matrícula e acesso do aluno
-
-1. Faça login com uma conta do perfil aluno.
-2. Abra `/cursos` para visualizar apenas os cursos publicados.
-3. Selecione um curso e clique em **Matricular-me**.
-4. O conteúdo das aulas se torna acessível; a mesma matrícula não pode ser feita duas vezes.
-5. Acesse **Meus cursos** para consultar todas as matrículas realizadas.
-
-**Regras demonstráveis:** um professor não consegue editar cursos de outro docente; o aluno não pode criar cursos; aulas exigem vínculo com matrícula ou autoria; rascunhos não são exibidos no catálogo; permissões do usuário são revalidadas no Auth Service mesmo quando seu JWT ainda não expirou.
-
-## 3. API REST de Cursos
-
-Todos os endpoints abaixo começam com `http://localhost:8000/api/v1`. Os IDs são UUIDs. A Gateway recebe os pedidos e os encaminha ao serviço Cursos, que revalida a conta ativa e o perfil através de uma chamada HTTP ao Auth Service. O serviço Cursos **não lê o banco do Auth**.
-
-| Método | Caminho | Perfil e finalidade |
-|---|---|---|
-| GET | `/courses` | Público: catálogo de cursos publicados |
-| POST | `/courses` | Professor: criar curso rascunho |
-| GET | `/courses/owned` | Professor: seus cursos |
-| GET | `/courses/enrollments/mine` | Aluno: suas matrículas |
-| GET | `/courses/{id}` | Autenticado: dados de curso publicado; rascunho somente para autor |
-| PATCH | `/courses/{id}` | Professor autor: editar ou publicar curso |
-| DELETE | `/courses/{id}` | Professor autor: excluir curso e seus vínculos |
-| POST | `/courses/{id}/enrollments` | Aluno: realizar matrícula em curso publicado |
-| GET | `/courses/{id}/lessons` | Professor autor ou aluno matriculado: listar e acessar aulas |
-| POST | `/courses/{id}/lessons` | Professor autor: criar aula |
-| PATCH | `/courses/{id}/lessons/{lesson_id}` | Professor autor: editar aula |
-| DELETE | `/courses/{id}/lessons/{lesson_id}` | Professor autor: excluir aula |
-
-Exemplo para criar um curso como professor (inclua seu JWT):
-
-```json
-{
-  "title": "Fundamentos de Python",
-  "description": "Introdução à programação com Python",
-  "category": "Programação"
-}
-```
-
-Exemplo para criar uma aula em `POST /courses/{id}/lessons`:
-
-```json
-{
-  "title": "Variáveis e tipos de dados",
-  "body": "Conteúdo textual da aula, com exemplos e exercícios.",
-  "material_url": "https://www.python.org/doc/",
-  "position": 1
-}
-```
-
-Para publicar: `PATCH /courses/{id}` com `{"status":"published"}`. A matrícula é criada por `POST /courses/{id}/enrollments`, com JWT do aluno e corpo vazio.
-
-Códigos HTTP relevantes: `200` sucesso; `201` criado; `204` removido; `401` credenciais inválidas; `403` perfil ou vínculo sem acesso; `404` recurso inexistente; `409` matrícula duplicada ou curso não publicado; `422` entrada inválida; `503` falha temporária da autenticação/rede.
-
-## 4. Arquitetura e componentes reutilizáveis
-
-```mermaid
-flowchart TD
- UI[React / Componentes reutilizáveis] --> G[API Gateway]
- G --> A[Auth Service]
- G --> C[Courses Service]
- G --> E[Assessments Service]
- G --> R[Recommendations Service]
- C -->|HTTP /auth/me| A
- E -->|HTTP autenticado| A
- E -->|Cursos e aulas| C
- R -->|Resultados do aluno| E
- R -->|Aulas| C
- R -->|HTTP autenticado| A
- A --> AD[(SQLite Auth)]
- C --> CD[(SQLite Courses)]
- E --> ED[(SQLite Assessments)]
- R --> RD[(SQLite Recommendations)]
-```
-
-A persistência do Courses Service contém três tabelas: `courses`, `lessons` e `enrollments`. O banco de cada serviço é independente. `enrollments` usa `UNIQUE(course_id, student_id)` e as relações de aulas/matrículas usam chaves estrangeiras com exclusão em cascata. O Courses armazena apenas `teacher_id` e `student_id` como identificadores, sem replicar tabelas de usuários.
-
-Componentes compartilhados no React: `AppShell`, `Navbar`, `Alert`, `ProtectedRoute`, `CourseCard`, `CourseForm` e `LessonEditor`. `AuthContext` centraliza a sessão; `apiClient` centraliza a comunicação REST. As telas incluem `CoursesCatalog`, `TeacherCourses`, `MyEnrollments`, `CourseDetail`, `CourseAssessments`, `QuizDetail` e `StudentPerformance`, além das páginas da Sprint 1.
-
-## 5. Testes e execução sem Docker
-
-**Requisitos para testes:** Python 3.11+, pip e dependências do projeto.
+Para executar localmente sem Docker:
 
 ```powershell
 python -m venv .venv
@@ -218,9 +247,7 @@ python -m pytest -q
 python tests/smoke_processes.py
 ```
 
-O smoke inicia 5 processos Python temporários nas portas `18100` a `18104`, com bancos SQLite temporários: Gateway, Auth, Courses, Assessments e Recommendations. Testa cadastro/login, promoção de professor, criação/publicação de curso e aula, matrícula, gabarito protegido, resposta a quiz, nota 5/10, tentativa duplicada, recomendação de aula, bloqueio de aluno não matriculado e revogação de privilégios. O processo não utiliza Docker.
-
-Para desenvolver o React isolado com backend já executando:
+Para trabalhar apenas no frontend com o backend já iniciado:
 
 ```powershell
 cd frontend
@@ -228,52 +255,64 @@ npm ci
 npm run dev
 ```
 
-**Nota:** o build de produção foi validado em 08/11/2026 e a Home servida pelo Docker foi carregada no Chrome em 09/11/2026. Registre também capturas dos fluxos completos de aluno, professor e administrador antes de entregar o trabalho.
+Os resultados e limites de cada verificação estão registrados em [docs/VALIDACAO_SPRINT4.md](docs/VALIDACAO_SPRINT4.md).
 
-## 6. Organização do repositório
+## Tecnologias
 
-```
-microlearn/
-├─ backend/
-│  ├─ common/                  # JWT e utilitários reutilizados
-│  ├─ gateway/                 # API Gateway
-│  └─ services/
-│     ├─ auth/                 # Auth + banco próprio
-│     ├─ courses/              # CRUD de cursos/aulas/matrículas
-│     ├─ assessments/          # Questionários, correção, tentativas e notas
-│     └─ recommendations/      # Motor de recomendação por regras
-├─ frontend/src/
-│  ├─ components/              # Componentes reutilizáveis
-│  ├─ context/                 # Sessão de autenticação
-│  ├─ pages/                   # Páginas React
-│  └─ services/                # Comunicação com Gateway
-├─ tests/                      # pytest e smoke com processos reais
-├─ docs/                       # Relatórios e evidências
-├─ docker-compose.yml
-├─ docker-compose.ca.yml       # CA local opcional para o build
-├─ .env.example
-└─ README.md
-```
+| Área | Tecnologias |
+|---|---|
+| Frontend | React 19, React Router 7, Vite 6, CSS |
+| Backend | Python 3.12, FastAPI, Uvicorn, Pydantic |
+| Autenticação | JWT, PBKDF2-HMAC-SHA256 |
+| Persistência | SQLite, volumes Docker independentes |
+| Infraestrutura | Docker Desktop, Docker Compose, Nginx |
+| Testes | pytest, TestClient, smoke HTTP e E2E pela API |
 
-## 7. Limites e evolução
+## Estrutura do repositório
 
-Esta aplicação é um protótipo acadêmico. Para uso público seriam necessários HTTPS, rate limiting, revogação de tokens, política de senhas/recuperação, prevenção reforçada contra XSS e uma revisão de concorrência/observabilidade. O frontend utiliza `sessionStorage` por simplicidade.
-
-**Sprint 3 implementada:** avaliações objetivas, registro de respostas, correção automática, notas e recomendações de revisão.
-
-**Sprint 4:** testes E2E, melhorias, documentação final, evidências Docker e publicação no GitHub.
-
-## 7. Estado da Sprint 4 e entrega acadêmica
-
-Para revisar os resultados obtidos no ambiente de geração:
-
-```powershell
-python -m pytest -q
-python tests/smoke_processes.py
+```text
+MicroLearn/
+├── backend/
+│   ├── common/                  # Segurança e utilitários compartilhados
+│   ├── gateway/                 # API Gateway
+│   └── services/
+│       ├── auth/                # Usuários, JWT e administração
+│       ├── courses/             # Cursos, aulas e matrículas
+│       ├── assessments/         # Questionários, tentativas e notas
+│       └── recommendations/     # Recomendações de revisão
+├── frontend/
+│   ├── src/components/          # Componentes reutilizáveis
+│   ├── src/context/             # Sessão e autenticação
+│   ├── src/pages/               # Páginas por fluxo e perfil
+│   └── src/services/            # Cliente da API Gateway
+├── tests/                       # Testes automatizados e smoke HTTP
+├── docs/                        # Diagramas, contratos e evidências
+├── docker-compose.yml           # Orquestração principal
+├── docker-compose.ca.yml        # CA local opcional para o build
+└── .env.example                 # Modelo de configuração
 ```
 
-Os testes Python e HTTP confirmam o funcionamento dos cinco processos do backend; os 24 testes `pytest` passaram novamente em 09/11/2026. O frontend também foi instalado e compilado; durante essa validação, a configuração do runtime JSX foi corrigida para eliminar a tela em branco. Na mesma data, o Docker Compose construiu as seis imagens e iniciou os seis contêineres: os cinco backends ficaram saudáveis, a interface respondeu HTTP 200 e foi renderizada no Chrome, e os logs recentes não apresentaram erros nem respostas HTTP 5xx. O E2E pela API Docker validou cadastro de aluno e professor, promoção pelo administrador, criação e publicação de curso e aula, matrícula, questionário de duas questões sem exposição do gabarito, nota 5,0 (1/2), resultado e recomendação.
+## Documentação
 
-Use `docs/CHECKLIST_ENTREGA.md` para marcar evidências, `docs/API_ENDPOINTS.md` para a relação de endpoints e `docs/VALIDACAO_SPRINT4.md` para os resultados e limites da validação.
+| Documento | Conteúdo |
+|---|---|
+| [Contratos da API](docs/API_ENDPOINTS.md) | Relação dos endpoints externos e regras de segurança. |
+| [Validação final](docs/VALIDACAO_SPRINT4.md) | Evidências de testes, Docker, navegador e E2E. |
+| [Checklist de entrega](docs/CHECKLIST_ENTREGA.md) | Itens implementados e evidências acadêmicas. |
+| [Arquitetura em Mermaid](docs/arquitetura.mmd) | Fonte editável do diagrama principal. |
+| [Relatório técnico final](docs/MicroLearn_Etapa_8_Sprint_4_Validacao_e_Documentacao.pdf) | Consolidação da implementação e validação. |
 
-**GitHub:** https://github.com/Jader-Neto/MicroLearn.
+Os relatórios das etapas anteriores também permanecem disponíveis na pasta [docs/](docs/).
+
+## Limitações conhecidas
+
+O MicroLearn é um protótipo acadêmico funcional. Para uma implantação pública ainda seriam necessários HTTPS no ambiente final, recuperação de senha, rate limiting, revogação de tokens, observabilidade e uma política explícita de retenção de dados.
+
+As avaliações são objetivas e imutáveis após a criação, cada aluno possui uma tentativa por questionário e a exclusão de cursos não executa uma transação distribuída para apagar históricos em outros serviços. O recomendador atual é determinístico e explicável; não utiliza inteligência artificial.
+
+---
+
+<div align="center">
+  <p><strong>MicroLearn — aprender, ensinar e evoluir em um só lugar.</strong></p>
+  <p>Engenharia de Software • 2026.2</p>
+</div>
