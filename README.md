@@ -308,7 +308,7 @@ Os relatórios das etapas anteriores também permanecem disponíveis na pasta [d
 
 O MicroLearn é um protótipo acadêmico funcional. Para uma implantação pública ainda seriam necessários HTTPS no ambiente final, recuperação de senha, rate limiting, revogação de tokens, observabilidade e uma política explícita de retenção de dados.
 
-As avaliações são objetivas e imutáveis após a criação, cada aluno possui uma tentativa por questionário e a exclusão de cursos não executa uma transação distribuída para apagar históricos em outros serviços. O recomendador atual é determinístico e explicável; não utiliza inteligência artificial.
+As avaliações são objetivas e imutáveis após a criação, cada aluno possui uma tentativa por questionário e a exclusão de cursos não executa uma transação distribuída para apagar históricos em outros serviços. O recomendador atual é determinístico e explicável;
 
 ---
 
