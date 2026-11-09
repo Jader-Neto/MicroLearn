@@ -15,13 +15,13 @@ O MicroLearn é um AVA acadêmico com microsserviços Python/FastAPI independent
 | API Gateway | Encaminhamento HTTP, JWT, estado dos serviços | Funcional e testado |
 | Frontend React | Cadastro/login, catálogo, matrículas, aulas, editor de avaliações, respostas, notas e recomendações | Build de produção aprovado e Home validada no Chrome com a Gateway integrada |
 
-**Validações executadas nesta entrega:** 24 testes Python aprovados novamente em 09/11/2026, smoke HTTP real entre a Gateway e quatro serviços aprovado (incluindo avaliação e recomendação), `npm run build` aprovado e Docker Compose validado. Os seis contêineres permaneceram ativos sem reinícios, os cinco serviços FastAPI ficaram saudáveis e a Gateway confirmou os quatro microsserviços. Um E2E pela API no Docker percorreu cadastro, promoção de professor, curso/aula/publicação, matrícula, avaliação com gabarito protegido, nota e recomendação; a Home React respondeu HTTP 200 e foi renderizada no Chrome. **Limite da validação visual:** o fluxo completo de todos os perfis ainda deve ser ensaiado e capturado antes da apresentação.
+**Validações executadas nesta entrega:** 24 testes Python aprovados novamente em 09/11/2026, smoke HTTP real entre a Gateway e quatro serviços aprovado (incluindo avaliação e recomendação), `npm run build` aprovado e Docker Compose validado. Os seis contêineres permaneceram ativos sem reinícios, os cinco serviços FastAPI ficaram saudáveis e a Gateway confirmou os quatro microsserviços. Um E2E pela API no Docker percorreu cadastro, promoção de professor, curso/aula/publicação, matrícula, avaliação com gabarito protegido, nota e recomendação; a Home React respondeu HTTP 200 e foi renderizada no Chrome.
 
 ## Sprint 4: administração de usuários, integração final e documentação
 
 Nesta sprint foi acrescentada a tela **`/admin/usuarios`**, acessível ao perfil administrador. Ela permite consultar contas, autorizar professores e administradores, ativar/desativar usuários, com confirmação de alterações e bloqueio de autodesativação. As operações utilizam os endpoints `GET /api/v1/auth/users` e `PATCH /api/v1/auth/users/{user_id}` já implementados no Auth Service.
 
-A página inicial ganhou o botão **Atualizar estado**, que consulta a Gateway em `/api/v1/status` para listar Autenticação, Cursos, Avaliações e Recomendações. Os registros de execução e os diagramas ficam em `docs/`, incluindo `VALIDACAO_SPRINT4.md`, `CHECKLIST_ENTREGA.md` e `API_ENDPOINTS.md`. O Docker Compose foi validado no Windows; permanecem pendentes apenas as capturas do fluxo visual completo de cada perfil.
+A página inicial ganhou o botão **Atualizar estado**, que consulta a Gateway em `/api/v1/status` para listar Autenticação, Cursos, Avaliações e Recomendações. Os registros de execução e os diagramas ficam em `docs/`, incluindo `VALIDACAO_SPRINT4.md`, `CHECKLIST_ENTREGA.md` e `API_ENDPOINTS.md`. O Docker Compose foi validado no Windows;
 
 ## Sprint 3: avaliações e recomendações
 
@@ -257,9 +257,11 @@ microlearn/
 
 ## 7. Limites e evolução
 
-Esta aplicação é um protótipo acadêmico. Para uso público seriam necessários HTTPS, rate limiting, revogação de tokens, política de senhas/recuperação, prevenção reforçada contra XSS e uma revisão de concorrência/observabilidade. O frontend utiliza `sessionStorage` por simplicidade e ainda requer testes completos em navegador.
+Esta aplicação é um protótipo acadêmico. Para uso público seriam necessários HTTPS, rate limiting, revogação de tokens, política de senhas/recuperação, prevenção reforçada contra XSS e uma revisão de concorrência/observabilidade. O frontend utiliza `sessionStorage` por simplicidade.
 
-**Sprint 3 implementada:** avaliações objetivas, registro de respostas, correção automática, notas e recomendações de revisão. **Sprint 4:** testes E2E, melhorias, documentação final, evidências Docker e publicação no GitHub.
+**Sprint 3 implementada:** avaliações objetivas, registro de respostas, correção automática, notas e recomendações de revisão.
+
+**Sprint 4:** testes E2E, melhorias, documentação final, evidências Docker e publicação no GitHub.
 
 ## 7. Estado da Sprint 4 e entrega acadêmica
 
@@ -270,8 +272,8 @@ python -m pytest -q
 python tests/smoke_processes.py
 ```
 
-Os testes Python e HTTP confirmam o funcionamento dos cinco processos do backend; os 24 testes `pytest` passaram novamente em 09/11/2026. O frontend também foi instalado e compilado; durante essa validação, a configuração do runtime JSX foi corrigida para eliminar a tela em branco. Na mesma data, o Docker Compose construiu as seis imagens e iniciou os seis contêineres: os cinco backends ficaram saudáveis, a interface respondeu HTTP 200 e foi renderizada no Chrome, e os logs recentes não apresentaram erros nem respostas HTTP 5xx. O E2E pela API Docker validou cadastro de aluno e professor, promoção pelo administrador, criação e publicação de curso e aula, matrícula, questionário de duas questões sem exposição do gabarito, nota 5,0 (1/2), resultado e recomendação. Ainda faltam as capturas do fluxo visual completo.
+Os testes Python e HTTP confirmam o funcionamento dos cinco processos do backend; os 24 testes `pytest` passaram novamente em 09/11/2026. O frontend também foi instalado e compilado; durante essa validação, a configuração do runtime JSX foi corrigida para eliminar a tela em branco. Na mesma data, o Docker Compose construiu as seis imagens e iniciou os seis contêineres: os cinco backends ficaram saudáveis, a interface respondeu HTTP 200 e foi renderizada no Chrome, e os logs recentes não apresentaram erros nem respostas HTTP 5xx. O E2E pela API Docker validou cadastro de aluno e professor, promoção pelo administrador, criação e publicação de curso e aula, matrícula, questionário de duas questões sem exposição do gabarito, nota 5,0 (1/2), resultado e recomendação.
 
-Use `docs/CHECKLIST_ENTREGA.md` para marcar evidências, `docs/API_ENDPOINTS.md` para a relação de endpoints e `docs/VALIDACAO_SPRINT4.md` para os resultados e limites da validação. O relatório técnico da Sprint 4 em PDF acompanha o ZIP.
+Use `docs/CHECKLIST_ENTREGA.md` para marcar evidências, `docs/API_ENDPOINTS.md` para a relação de endpoints e `docs/VALIDACAO_SPRINT4.md` para os resultados e limites da validação.
 
-**GitHub:** https://github.com/Jader-Neto/MicroLearn. Adicione esse endereço à capa do relatório entregue à disciplina. Não inclua `.env` nem credenciais no versionamento.
+**GitHub:** https://github.com/Jader-Neto/MicroLearn.

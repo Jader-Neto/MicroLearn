@@ -34,7 +34,7 @@ export async function getSystemStatus() {
   catch { return null; }
 }
 
-// Contrato REST do microsserviço Cursos (Sprint 2).
+// Contrato REST do microsserviço Cursos.
 export const coursesApi = {
   catalog: () => apiRequest('/courses'),
   owned: (token) => apiRequest('/courses/owned', { token }),
@@ -50,7 +50,7 @@ export const coursesApi = {
   removeLesson: (id, lessonId, token) => apiRequest(`/courses/${encodeURIComponent(id)}/lessons/${encodeURIComponent(lessonId)}`, { method:'DELETE', token }),
 };
 
-// Sprint 3: questionários e recomendações por APIs independentes.
+// Questionários e recomendações por APIs independentes.
 export const assessmentsApi = {
   byCourse: (courseId, token) => apiRequest(`/assessments/courses/${encodeURIComponent(courseId)}/quizzes`, { token }),
   create: (courseId, data, token) => apiRequest(`/assessments/courses/${encodeURIComponent(courseId)}/quizzes`, { method: 'POST', token, body: JSON.stringify(data) }),
