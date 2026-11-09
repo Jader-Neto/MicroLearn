@@ -24,6 +24,6 @@ O build padrão mantém a validação TLS. Quando um antivírus ou proxy inspeci
 1. Registrar capturas de cadastro/login e dos três painéis; a Home já foi visualmente validada.
 2. Exercitar e capturar no navegador o fluxo de promoção do professor, CRUD de cursos e aulas, matrícula, avaliação e recomendação; esse mesmo fluxo já foi aprovado pela API Docker.
 3. Verificar a apresentação em diferentes tamanhos de tela.
-4. Publicar o repositório no GitHub e inserir a URL real na capa do relatório acadêmico final.
+4. Inserir a URL do repositório já publicado na capa do relatório acadêmico final.
 
 **Não afirmar que as verificações pendentes foram concluídas até possuírem evidências da execução local.**

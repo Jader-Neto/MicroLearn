@@ -274,4 +274,4 @@ Os testes Python e HTTP confirmam o funcionamento dos cinco processos do backend
 
 Use `docs/CHECKLIST_ENTREGA.md` para marcar evidências, `docs/API_ENDPOINTS.md` para a relação de endpoints e `docs/VALIDACAO_SPRINT4.md` para os resultados e limites da validação. O relatório técnico da Sprint 4 em PDF acompanha o ZIP.
 
-**GitHub:** URL ainda não informada; publique os arquivos em um repositório próprio e adicione o endereço real à capa do relatório entregue à disciplina. Não inclua `.env` nem credenciais no versionamento.
+**GitHub:** https://github.com/Jader-Neto/MicroLearn. Adicione esse endereço à capa do relatório entregue à disciplina. Não inclua `.env` nem credenciais no versionamento.

@@ -25,7 +25,8 @@
 
 - [ ] Capturas reais de interface: Home, Login, Cursos, Matrícula, Aulas, Questionário, Notas, Recomendações e Administração
 - [ ] Identificar equipe, orientador e período no relatório acadêmico definitivo
-- [ ] Repositório GitHub publicado e URL real na capa do relatório
+- [x] Repositório GitHub publicado: https://github.com/Jader-Neto/MicroLearn
+- [ ] URL real do GitHub inserida na capa do relatório
 - [ ] Ensaio visual da demonstração funcional ponta a ponta (o E2E pela API já foi aprovado)
 
 ## Observações de projeto
